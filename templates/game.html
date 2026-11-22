@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% block title %}{{ game.title }}{% endblock %}
+{% set active = 'dashboard' %}
+{% block nav %}{% include "_nav.html" %}{% endblock %}
+{% block bodyclass %}game-page{% endblock %}
+{% block content %}
+
+<div id="gameRoot" style="--accent: {{ game.accent }}">
+  <header class="game-head">
+    <a class="btn btn-ghost btn-sm" href="{{ url_for('dashboard') }}">&larr; Missions</a>
+    <div class="game-head-title">
+      <p class="eyebrow">// {{ game.chapter }} · {{ game.tagline }}</p>
+      <h1>{{ game.title }}</h1>
+    </div>
+    <button class="btn btn-ghost btn-sm" id="btnTutorial" title="Watch the tutorial again">
+      <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><path d="M9.1 9a3 3 0 015.8 1c0 2-3 2.4-3 4"/><circle cx="12" cy="17.6" r="0.4" fill="currentColor"/></svg>
+      Tutorial
+    </button>
+  </header>
+
+  <div id="stage"><!-- engine renders here --></div>
+</div>
+
+<!-- Tutorial modal -->
+<div class="modal-backdrop hidden" id="tutorialModal">
+  <div class="modal">
+    <div class="modal-head">
+      <span class="modal-tag">BRIEFING</span>
+      <h2 id="tutTitle"></h2>
+    </div>
+    <div class="modal-body" id="tutBody"></div>
+    <div class="tut-dots" id="tutDots"></div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" id="tutSkip">Skip tutorial</button>
+      <div class="modal-actions-right">
+        <button class="btn btn-ghost" id="tutPrev">&larr; Back</button>
+        <button class="btn btn-primary" id="tutNext">Next &rarr;</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}
+{% block scripts %}
+<script>
+window.CQ = {
+  gameId: {{ game_id | tojson }},
+  gameTitle: {{ game.title | tojson }},
+  progress: {{ prog | tojson }},
+  tutorialSeen: {{ tutorial_seen | tojson }},
+};
+</script>
+<script src="{{ url_for('static', filename='js/engine.js') }}"></script>
+<script src="{{ url_for('static', filename='js/games/' + game_id + '.js') }}"></script>
+<script>CQEngine.boot();</script>
+{% endblock %}

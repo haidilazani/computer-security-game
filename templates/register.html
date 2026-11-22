@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+{% block title %}Sign up{% endblock %}
+{% block bodyclass %}auth-page{% endblock %}
+{% block mainclass %}auth-wrap{% endblock %}
+{% block content %}
+<div class="auth-card">
+  <div class="auth-logo">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l8 4v6c0 5-3.5 8.5-8 10-4.5-1.5-8-5-8-10V6z"/><path d="M9 12l2 2 4-4"/></svg>
+  </div>
+  <h1>Request clearance</h1>
+  <p class="auth-sub">// Enrol with your email to start training</p>
+
+  {% if error %}<div class="alert alert-error">{{ error }}</div>{% endif %}
+
+  <form method="post" novalidate>
+    <label class="field">
+      <span>Email</span>
+      <input type="email" name="email" value="{{ email or '' }}" required autocomplete="email" placeholder="you@example.com">
+    </label>
+    <div class="field-row">
+      <label class="field">
+        <span>Name</span>
+        <input type="text" name="name" value="{{ name or '' }}" required placeholder="Your display name">
+      </label>
+      <label class="field">
+        <span>Username</span>
+        <input type="text" name="username" value="{{ username or '' }}" required autocomplete="username" placeholder="agent_007">
+      </label>
+    </div>
+    <label class="field">
+      <span>Password <small>(min. 8 characters)</small></span>
+      <input type="password" name="password" id="pw" required autocomplete="new-password">
+    </label>
+    <div class="pw-meter" id="pwMeter"><div class="pw-bar" id="pwBar"></div></div>
+    <p class="pw-label" id="pwLabel">&nbsp;</p>
+    <label class="field">
+      <span>Confirm password</span>
+      <input type="password" name="confirm" required autocomplete="new-password">
+    </label>
+    <button class="btn btn-primary btn-block" type="submit">Create account &rarr;</button>
+  </form>
+
+  <p class="auth-switch">Already cleared? <a href="{{ url_for('login') }}">Log in</a></p>
+</div>
+{% endblock %}
+{% block scripts %}
+<script>
+// Live password strength meter — a taste of Chapter 2 before you even log in.
+const pw = document.getElementById('pw'), bar = document.getElementById('pwBar'), label = document.getElementById('pwLabel');
+pw.addEventListener('input', () => {
+  const v = pw.value;
+  let s = 0;
+  if (v.length >= 8) s++;
+  if (v.length >= 12) s++;
+  if (/[A-Z]/.test(v) && /[a-z]/.test(v)) s++;
+  if (/\d/.test(v)) s++;
+  if (/[^A-Za-z0-9]/.test(v)) s++;
+  const levels = [
+    ['', '', 0], ['Weak — a dictionary attack eats this for breakfast', '#f87171', 20],
+    ['Fair — brute force would still get there', '#fbbf24', 40],
+    ['Good — getting expensive to crack', '#fbbf24', 60],
+    ['Strong — long + mixed = huge key space', '#34d399', 80],
+    ['Excellent — practically brute-force-proof', '#22d3ee', 100]
+  ];
+  const [text, color, width] = levels[s];
+  bar.style.width = width + '%';
+  bar.style.background = color;
+  label.textContent = text || ' ';
+  label.style.color = color;
+});
+</script>
+{% endblock %}

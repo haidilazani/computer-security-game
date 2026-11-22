@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block title %}Login{% endblock %}
+{% block bodyclass %}auth-page{% endblock %}
+{% block mainclass %}auth-wrap{% endblock %}
+{% block content %}
+<div class="auth-card">
+  <div class="auth-logo">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l8 4v6c0 5-3.5 8.5-8 10-4.5-1.5-8-5-8-10V6z"/><path d="M9 12l2 2 4-4"/></svg>
+  </div>
+  <h1>CyberQuest<span class="accent">_</span></h1>
+  <p class="auth-sub">// CSC662 · Computer Security Training Terminal</p>
+
+  {% if error %}<div class="alert alert-error">{{ error }}</div>{% endif %}
+
+  <form method="post" novalidate>
+    <label class="field">
+      <span>Email or username</span>
+      <input type="text" name="identity" value="{{ identity or '' }}" autofocus required autocomplete="username">
+    </label>
+    <label class="field">
+      <span>Password</span>
+      <input type="password" name="password" required autocomplete="current-password">
+    </label>
+    <button class="btn btn-primary btn-block" type="submit">Authenticate &rarr;</button>
+  </form>
+
+  <p class="auth-switch">No clearance yet? <a href="{{ url_for('register') }}">Create an account</a></p>
+</div>
+<p class="auth-footnote">Passwords are stored as one-way salted hashes — exactly like Chapter 2 says they should be.</p>
+{% endblock %}

@@ -1,0 +1,16 @@
+<nav class="topnav">
+  <a class="brand" href="{{ url_for('dashboard') }}">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l8 4v6c0 5-3.5 8.5-8 10-4.5-1.5-8-5-8-10V6z"/><path d="M9 12l2 2 4-4"/></svg>
+    <span>CyberQuest<span class="blink">_</span></span>
+  </a>
+  <div class="navlinks">
+    <a href="{{ url_for('dashboard') }}" class="{{ 'active' if active == 'dashboard' }}">Missions</a>
+    <a href="{{ url_for('history') }}" class="{{ 'active' if active == 'history' }}">History</a>
+    <a href="{{ url_for('profile') }}" class="{{ 'active' if active == 'profile' }}">Profile</a>
+  </div>
+  <div class="navuser">
+    <span class="rank-chip" title="Rank">{{ stats.rank }}</span>
+    <span class="xp-chip" title="Total XP">{{ stats.xp }} XP</span>
+    <a class="btn btn-ghost btn-sm" href="{{ url_for('logout') }}">Log out</a>
+  </div>
+</nav>

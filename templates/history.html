@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block title %}History{% endblock %}
+{% set active = 'history' %}
+{% block nav %}{% include "_nav.html" %}{% endblock %}
+{% block content %}
+
+<header class="page-head">
+  <div>
+    <p class="eyebrow">// Audit log</p>
+    <h1>Activity history</h1>
+    <p class="muted">Accountability: every action is traceable to the agent responsible. That's you.</p>
+  </div>
+</header>
+
+{% if entries %}
+<div class="log-table">
+  {% for e in entries %}
+  <div class="log-row log-{{ e.action }}">
+    <span class="log-time">{{ e.timestamp }}</span>
+    <span class="log-badge">{{ {'login':'LOGIN','logout':'LOGOUT','signup':'SIGNUP','profile':'PROFILE','level':'LEVEL ✓','game_start':'MISSION','level_start':'ATTEMPT','tutorial':'TUTORIAL'}.get(e.action, e.action | upper) }}</span>
+    <span class="log-detail">{{ e.detail }}</span>
+  </div>
+  {% endfor %}
+</div>
+{% else %}
+<div class="panel empty-state">
+  <p>No activity recorded yet. Go play a mission — this log fills itself.</p>
+</div>
+{% endif %}
+
+{% endblock %}

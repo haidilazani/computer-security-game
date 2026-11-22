@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+{% block title %}Profile{% endblock %}
+{% set active = 'profile' %}
+{% block nav %}{% include "_nav.html" %}{% endblock %}
+{% block content %}
+
+<header class="page-head">
+  <div>
+    <p class="eyebrow">// Agent file</p>
+    <h1>Profile</h1>
+  </div>
+</header>
+
+{% if message %}<div class="alert alert-ok">{{ message }}</div>{% endif %}
+{% if error %}<div class="alert alert-error">{{ error }}</div>{% endif %}
+
+<div class="profile-grid">
+  <section class="panel">
+    <h2 class="panel-title">Identity</h2>
+    <p class="muted panel-note">Email is your fixed identifier — <em>identification</em>. Name and username you may change.</p>
+    <form method="post">
+      <input type="hidden" name="form" value="details">
+      <label class="field">
+        <span>Email <small>(cannot be changed)</small></span>
+        <input type="email" value="{{ user.email }}" disabled>
+      </label>
+      <label class="field">
+        <span>Name</span>
+        <input type="text" name="name" value="{{ user.name }}" required>
+      </label>
+      <label class="field">
+        <span>Username</span>
+        <input type="text" name="username" value="{{ user.username }}" required>
+      </label>
+      <button class="btn btn-primary" type="submit">Save changes</button>
+    </form>
+  </section>
+
+  <section class="panel">
+    <h2 class="panel-title">Authentication</h2>
+    <p class="muted panel-note">Something you <em>know</em>. Re-entering your current password = re-authentication before a sensitive change.</p>
+    <form method="post">
+      <input type="hidden" name="form" value="password">
+      <label class="field">
+        <span>Current password</span>
+        <input type="password" name="current" required autocomplete="current-password">
+      </label>
+      <label class="field">
+        <span>New password <small>(min. 8 characters)</small></span>
+        <input type="password" name="new" required autocomplete="new-password">
+      </label>
+      <label class="field">
+        <span>Confirm new password</span>
+        <input type="password" name="confirm" required autocomplete="new-password">
+      </label>
+      <button class="btn btn-primary" type="submit">Change password</button>
+    </form>
+  </section>
+
+  <section class="panel">
+    <h2 class="panel-title">Service record</h2>
+    <ul class="record-list">
+      <li><span>Rank</span><strong>{{ stats.rank }}</strong></li>
+      <li><span>Total XP</span><strong>{{ stats.xp }}</strong></li>
+      <li><span>Stars collected</span><strong>{{ stats.stars }} / 60</strong></li>
+      <li><span>Levels completed</span><strong>{{ stats.levels_done }} / 20</strong></li>
+      <li><span>Enrolled since</span><strong>{{ user.created_at.split(' ')[0] }}</strong></li>
+    </ul>
+  </section>
+</div>
+
+{% endblock %}

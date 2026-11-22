@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+{% block title %}Missions{% endblock %}
+{% set active = 'dashboard' %}
+{% block nav %}{% include "_nav.html" %}{% endblock %}
+{% block content %}
+
+<header class="page-head">
+  <div>
+    <p class="eyebrow">// Mission select</p>
+    <h1>Welcome back, <span class="accent">{{ user.name }}</span></h1>
+    <p class="muted">Five chapters. Twenty levels. Master the syllabus by playing it.</p>
+  </div>
+  <div class="stat-strip">
+    <div class="stat"><span class="stat-num">{{ stats.xp }}</span><span class="stat-label">XP</span></div>
+    <div class="stat"><span class="stat-num">{{ stats.stars }}<small>/60</small></span><span class="stat-label">Stars</span></div>
+    <div class="stat"><span class="stat-num">{{ stats.levels_done }}<small>/20</small></span><span class="stat-label">Levels</span></div>
+  </div>
+</header>
+
+{% if stats.next_rank %}
+<div class="rank-progress">
+  <span>Rank: <strong>{{ stats.rank }}</strong></span>
+  <div class="rank-bar"><div class="rank-fill" style="width: {{ (stats.xp / stats.next_xp * 100) | round(1) }}%"></div></div>
+  <span class="muted">{{ stats.next_xp - stats.xp }} XP to {{ stats.next_rank }}</span>
+</div>
+{% else %}
+<div class="rank-progress">
+  <span>Rank: <strong>{{ stats.rank }}</strong> — maximum clearance reached ★</span>
+</div>
+{% endif %}
+
+<div class="game-grid">
+  {% set icons = {
+    'shield': '<path d="M12 2l8 4v6c0 5-3.5 8.5-8 10-4.5-1.5-8-5-8-10V6z"/><path d="M9 12l2 2 4-4"/>',
+    'key': '<circle cx="7.5" cy="15.5" r="4.5"/><path d="M10.7 12.3L21 2m-4 4l3 3m-6 0l3 3"/>',
+    'lock': '<rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 018 0v4"/><circle cx="12" cy="16" r="1.4"/>',
+    'terminal': '<rect x="2" y="4" width="20" height="16" rx="2"/><path d="M6 9l4 3-4 3m6 1h6"/>',
+    'bug': '<circle cx="12" cy="13" r="6"/><path d="M12 7V4m-6.5 4.5L3 6m18 2.5L18.5 6M3 13H1m22 0h-2M5 19l-2 2m18-2l2 2M9 13h6"/>'
+  } %}
+  {% for gid, g in games.items() %}
+  {% set p = prog.get(gid, {}) %}
+  {% set done = p | length %}
+  {% set stars = p.values() | map(attribute='stars') | sum %}
+  <a class="game-card" href="{{ url_for('game', game_id=gid) }}" style="--accent: {{ g.accent }}">
+    <div class="game-card-top">
+      <span class="game-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">{{ icons[g.icon] | safe }}</svg>
+      </span>
+      <span class="chapter-tag">{{ g.chapter }}</span>
+    </div>
+    <h2>{{ g.title }}</h2>
+    <p class="game-tagline">{{ g.tagline }}</p>
+    <div class="game-meta">
+      <div class="level-dots">
+        {% for i in range(1, g.levels + 1) %}
+          <span class="dot {{ 'done' if i in p }}"></span>
+        {% endfor %}
+      </div>
+      <span class="game-stars">★ {{ stars }}/{{ g.levels * 3 }}</span>
+    </div>
+    <div class="game-progressbar"><div style="width: {{ (done / g.levels * 100) | round }}%"></div></div>
+    <span class="game-cta">{{ 'Continue' if done > 0 and done < g.levels else ('Replay' if done == g.levels else 'Start mission') }} &rarr;</span>
+  </a>
+  {% endfor %}
+</div>
+
+{% endblock %}
